@@ -78,7 +78,8 @@ extension/         Manifest V3 extension (no build step, no host permissions)
   icons/            generated PNG icons
 deploy/            the same ACP, plus import and configuration notes
 test/              ifsStore.test.js  (npm run test:ifs)
-scripts/           icon generator
+scripts/           PowerShell generators for the icons and store assets
+store-assets/      128px store icon and 1280x800 screenshots for the listing
 ```
 
 ## Trademarks
