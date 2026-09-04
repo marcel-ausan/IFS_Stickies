@@ -1,4 +1,4 @@
-# Privacy Policy — IFS Aurena Sticky Notes
+# Privacy Policy — IFS Sticky Notes
 
 _Last updated: 4 September 2026_
 

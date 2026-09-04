@@ -1,4 +1,4 @@
-# IFS Aurena Sticky Notes — Project Memory
+# IFS Sticky Notes — Project Memory
 
 Record-specific sticky notes overlaid on IFS Cloud **Aurena** pages, recreating the
 Apps10 Enterprise Explorer "sticky notes" feature that has no equivalent in IFS Cloud —
@@ -116,10 +116,13 @@ It exists because **a fresh install is invisible**: no host permissions means no
 anywhere, and even once granted the notes need `CStickyNotes` to exist. Without it the first
 experience is a 📝 button that never appears, followed by one that errors.
 
-Unlike the popup it has no active IFS tab to read an origin from, so the user **types their
-IFS address** and `toOrigin()` normalises it — bare host, full deep link, with or without a
-scheme — before requesting that one origin. It also lists granted sites with per-site
-Remove, so it doubles as the place to see where the extension is running.
+**Granting does not happen on this page.** It once carried an address field, because unlike
+the popup it has no active IFS tab to read an origin from — but asking someone to paste a
+URL the extension can read itself was work we invented. The field, the origin parser and
+the grant handler were all deleted; the page directs users to the popup, which has
+`activeTab` and already knows the site. It only lists granted sites with per-site Remove,
+and subscribes to `permissions.onAdded` so it fills in live rather than sitting on a stale
+"not enabled anywhere yet" while the user grants in another window.
 
 ### The ACP prerequisite is stated at the point of granting
 
@@ -424,7 +427,7 @@ open tabs** — close and reopen the Aurena tab.
 
 Use **Test connection** in the popup to probe read/write against the projection; it runs
 `SN.ifsStore.probe()` on the active tab and reports back. To call it by hand from DevTools,
-switch the Console **context dropdown** to "IFS Aurena Sticky Notes" first, or `SN` is
+switch the Console **context dropdown** to the extension name first, or `SN` is
 undefined.
 
 ## Conventions
