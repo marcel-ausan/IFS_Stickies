@@ -1,0 +1,138 @@
+/*
+ * GitHub Pages site. Same visual identity as the extension's own pages — dark
+ * ink ground, serif voice, the eight note colours as the only ornament — and the
+ * same system-font stack, so the site loads with no third-party request either.
+ */
+
+:root {
+  --ink: #16181d;
+  --paper: #f7f6f3;
+  --surface: #ffffff;
+  --text: #1b1d22;
+  --text-2: #55585f;
+  --text-3: #86888f;
+  --hair: #e4e2dc;
+  --hair-strong: #cdcac2;
+  --amber: #f5b301;
+  --amber-deep: #b07d00;
+  --amber-wash: #fdf4dc;
+  --ok: #14663c;
+
+  --c1: #fff7a8; --c2: #ffd8a8; --c3: #ffd1dc; --c4: #e6d5ff;
+  --c5: #bfe3ff; --c6: #c3f2ef; --c7: #c8f7c5; --c8: #e4e6ea;
+
+  --display: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --mono: "Cascadia Mono", Consolas, "SF Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 16.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 800px; margin: 0 auto; padding: 0 28px; }
+
+/* ---------- hero ---------- */
+
+.hero { background: var(--ink); color: #f2f1ee; padding: 64px 0 56px; position: relative; }
+.hero::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 5px;
+  background: linear-gradient(to right,
+    var(--c1) 0 12.5%, var(--c2) 12.5% 25%, var(--c3) 25% 37.5%, var(--c4) 37.5% 50%,
+    var(--c5) 50% 62.5%, var(--c6) 62.5% 75%, var(--c7) 75% 87.5%, var(--c8) 87.5% 100%);
+}
+.eyebrow {
+  font-size: 11.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--amber); margin: 0 0 20px;
+}
+.hero h1 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(2.1rem, 5.2vw, 3.1rem);
+  line-height: 1.12; letter-spacing: -.012em;
+  margin: 0 0 18px; max-width: 20ch; text-wrap: balance;
+}
+.hero .sub { font-size: 1.06rem; margin: 0; max-width: 56ch; color: #c8c9cd; }
+.hero .sub b { color: #fff; font-weight: 600; }
+.hero a { color: #d9d9dc; }
+
+.backlink { margin: 0 0 16px; font-size: 14px; }
+.backlink a { color: #b9bac0; font-weight: 600; text-decoration: none; }
+.backlink a:hover { color: #fff; text-decoration: underline; }
+
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 30px 0 0; }
+.btn {
+  font-size: 15px; font-weight: 600; padding: 12px 22px;
+  border: 1px solid var(--amber); border-radius: 4px;
+  background: var(--amber); color: #3a2a00;
+  text-decoration: none; display: inline-block;
+}
+.btn:hover { background: #ffc42e; border-color: #ffc42e; }
+.btn.ghost { background: transparent; color: inherit; border-color: currentColor; opacity: .85; }
+.btn.ghost:hover { background: rgba(255,255,255,.08); opacity: 1; }
+.btn:focus-visible { outline: 2px solid #4a8cff; outline-offset: 2px; }
+
+/* ---------- body ---------- */
+
+main { padding: 52px 0 20px; }
+
+h2 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  line-height: 1.22; margin: 40px 0 10px; text-wrap: balance;
+}
+main > .wrap > h2:first-child { margin-top: 0; }
+h3 { font-size: 1.02rem; font-weight: 650; margin: 26px 0 6px; }
+
+p { margin: 0 0 14px; max-width: 64ch; }
+ul { max-width: 64ch; padding-left: 20px; }
+li { margin-bottom: 8px; }
+a { color: var(--amber-deep); font-weight: 600; }
+strong, b { font-weight: 650; }
+
+.lede { color: var(--text-2); font-size: 1.05rem; }
+.stamp { color: var(--text-3); font-size: 14px; margin-bottom: 30px; }
+
+.callout {
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  border-left: 3px solid var(--amber);
+  border-radius: 6px;
+  padding: 18px 22px;
+  margin: 22px 0;
+}
+.callout p:last-child { margin-bottom: 0; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--hair); border-radius: 6px; background: var(--surface); margin: 20px 0; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14.5px; }
+th, td { text-align: left; padding: 11px 15px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+thead th {
+  font-size: 11px; font-weight: 650; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--text-3); background: var(--paper); border-bottom: 1px solid var(--hair-strong);
+}
+tbody tr:last-child td { border-bottom: 0; }
+
+code {
+  font-family: var(--mono); font-size: .85em;
+  background: var(--amber-wash); border: 1px solid #efe2bd;
+  border-radius: 3px; padding: 1px 5px;
+}
+
+footer {
+  border-top: 1px solid var(--hair);
+  margin-top: 48px;
+  padding: 26px 0 64px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+footer p { max-width: 70ch; }
+
+@media (max-width: 620px) { body { font-size: 16px; } .hero { padding: 44px 0 40px; } }

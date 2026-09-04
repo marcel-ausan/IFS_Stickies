@@ -2,6 +2,9 @@
 
 _Last updated: 4 September 2026_
 
+> Published at **https://marcel-ausan.github.io/IFS_Stickies/privacy.html** — that is the URL
+> given to the Chrome Web Store. This file is the source it is written from.
+
 ## Summary
 
 This extension has no server. It collects nothing, transmits nothing to us, and contains no

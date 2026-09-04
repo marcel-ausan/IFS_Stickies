@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — IFS Sticky Notes</title>
+    <meta name="description" content="IFS Sticky Notes collects nothing and has no server. Everything stays between your browser and your own IFS Cloud environment." />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="hero">
+      <div class="wrap">
+        <p class="backlink"><a href="./">← IFS Sticky Notes</a></p>
+        <p class="eyebrow">Privacy Policy</p>
+        <h1>Nothing leaves your IFS environment.</h1>
+        <p class="sub">
+          This extension has no server. It collects nothing, transmits nothing to us, and
+          contains no analytics or telemetry of any kind.
+        </p>
+      </div>
+    </div>
+
+    <main>
+      <div class="wrap">
+        <p class="stamp">Last updated 4 September 2026</p>
+
+        <h2>What the extension does</h2>
+        <p>
+          It draws sticky notes on top of IFS Cloud (Aurena) pages and binds them to the record
+          you are viewing. Notes are stored in a custom entity (<code>CStickyNotes</code>) inside
+          <b>your own IFS environment</b> — the same system that already holds the record the note
+          is attached to.
+        </p>
+
+        <h2>What data is involved</h2>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Data</th><th>Where it goes</th></tr></thead>
+            <tbody>
+              <tr><td>Note text, colour, size and position</td><td>Written to <code>CStickyNotes</code> in your IFS environment</td></tr>
+              <tr><td>The record the note is attached to</td><td>Derived from the page URL; stored with the note in IFS</td></tr>
+              <tr><td>Your IFS (FND) user id</td><td>Read from your existing IFS session, stored with the note for attribution</td></tr>
+              <tr><td>Names and user ids of people you <b>@</b>-mention</td><td>Read from your organisation’s own IFS person list, to show the picker</td></tr>
+              <tr><td>An optional user-id override you type in the popup</td><td>Stored locally in your browser via <code>chrome.storage.sync</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>What we receive</h2>
+        <div class="callout">
+          <p>
+            <b>Nothing.</b> The developer of this extension operates no server and receives no
+            data. There is no usage tracking, no crash reporting, no advertising identifiers and
+            no third-party services. No data is sold, transferred, or used for any purpose beyond
+            drawing your notes.
+          </p>
+        </div>
+
+        <h2>Permissions, and why they exist</h2>
+        <ul>
+          <li><b><code>storage</code></b> — remembers the optional user-id override you type in the popup. Nothing else is stored.</li>
+          <li><b><code>scripting</code></b> — injects the note overlay into the IFS Cloud site you have explicitly enabled.</li>
+          <li><b><code>activeTab</code></b> — when you click the extension icon, lets the popup read the current tab’s address so it can identify which IFS Cloud site you are on and ask permission for exactly that site. It is not stored or transmitted.</li>
+          <li>
+            <b>Host access</b> — requested at runtime, one site at a time, only when you press
+            <b>Enable on this site</b>. The extension holds <b>no</b> host permissions when
+            installed. Access is narrowed to the <code>/main/ifsapplications/web/</code> path, and
+            you can revoke it per site from the popup at any time.
+          </li>
+        </ul>
+
+        <h2>E-mail notifications</h2>
+        <p>
+          When you <b>@</b>-mention someone and press the notify button, the extension writes the
+          recipient list and message into the note’s record in IFS. <b>Your IFS environment</b>
+          sends the resulting e-mail, using its own configured mail settings. The extension never
+          sends e-mail itself and never sees an e-mail address.
+        </p>
+
+        <h2>Data retention and deletion</h2>
+        <p>
+          Notes live in your IFS environment and are governed by your organisation’s own retention
+          policies and backups. Deleting a note in the extension deletes the record in IFS.
+          Removing the extension does not delete notes already stored in IFS.
+        </p>
+
+        <h2>Changes</h2>
+        <p>
+          Material changes to this policy will be published here alongside a new extension version.
+        </p>
+
+        <h2>Contact</h2>
+        <p><a href="mailto:marcel.ausan@gmail.com">marcel.ausan@gmail.com</a></p>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <p>
+          Free and open source under the MIT licence —
+          <a href="https://github.com/marcel-ausan/IFS_Stickies">source on GitHub</a>.
+          <b>Not affiliated with IFS AB.</b> “IFS” and “IFS Cloud” are trademarks of IFS AB, used
+          here only to describe the software this extension works with.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

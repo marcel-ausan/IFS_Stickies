@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IFS Sticky Notes — Free &amp; Open Source</title>
+    <meta name="description" content="Shared sticky notes on any IFS Cloud record, with @-mentions that e-mail the people you tag. Free, open source, and stored in your own IFS." />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Free &amp; open source</p>
+        <h1>Notes that live on the record.</h1>
+        <p class="sub">
+          Pin a note to a customer order, a work order, a part — anything with its own page in IFS
+          Cloud. Everyone on your team who opens that record sees it, and every note is stored in
+          <b>your own IFS environment</b>. No server, no third party, nothing to host.
+        </p>
+        <div class="cta">
+          <a class="btn" href="https://github.com/marcel-ausan/IFS_Stickies">Source on GitHub</a>
+          <a class="btn ghost" href="privacy.html">Privacy policy</a>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <div class="wrap">
+        <h2>What it is</h2>
+        <p class="lede">
+          A browser extension that restores the post-it note feature IFS Applications had and IFS
+          Cloud does not — notes attached to a specific record, visible to whoever opens it.
+        </p>
+        <ul>
+          <li>Draggable, resizable notes in eight colours, scoped to the record on screen.</li>
+          <li>Type <b>@</b> to mention a colleague — the search matches both full name and FND user id.</li>
+          <li>Press <b>✉ Notify</b> and they get an e-mail with a link straight back to the record.</li>
+          <li>Sent by your own IFS, from your own mail configuration.</li>
+        </ul>
+
+        <h2>Where the data lives</h2>
+        <div class="callout">
+          <p>
+            In your IFS environment, in a custom entity the supplied configuration package
+            creates. There is no backend behind this extension — no server to host, no account to
+            create, no data leaving your tenant. That is usually the difference between a
+            security review that passes and one that stalls.
+          </p>
+        </div>
+
+        <h2>Getting it</h2>
+        <p>
+          Two pieces: the browser extension, and a small <b>Application Configuration Package</b>
+          your IFS administrator imports once per environment. Both are in the repository, and
+          both are free.
+        </p>
+        <ul>
+          <li>
+            <a href="https://github.com/marcel-ausan/IFS_Stickies">The repository</a> — extension
+            source, the configuration package under <code>deploy/</code>, and full setup notes.
+          </li>
+          <li>
+            The extension opens its own setup guide on install, including an administrator page
+            that can be printed or copied into a ticket.
+          </li>
+        </ul>
+
+        <h2>Support</h2>
+        <p>
+          The software is MIT licensed and offered <b>as is, with no warranty</b>. That is not
+          boilerplate: it depends on Aurena’s URL scheme and on the REST naming IFS generates for
+          a custom logical unit, neither of which is a documented interface, and an IFS upgrade
+          can move either.
+        </p>
+        <p>
+          <b>Implementation and support services are available from the developer</b> — environment
+          setup, configuration for your own IFS instance, browser rollout, and keeping it working
+          across IFS releases. <a href="mailto:marcel.ausan@gmail.com">Get in touch</a> if you
+          would rather not carry that yourself.
+        </p>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <p>
+          Free and open source under the MIT licence.
+          <b>Not affiliated with IFS AB.</b> “IFS” and “IFS Cloud” are trademarks of IFS AB, used
+          here only to describe the software this extension works with.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
