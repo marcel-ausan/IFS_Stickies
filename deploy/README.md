@@ -1,18 +1,44 @@
-# IFS configuration package
+# IFS configuration packages
 
-`STICKY-NOTES.zip` is an **Application Configuration Package** containing everything the
-extension needs on the IFS side. One import per environment, roughly ten minutes.
+Two Application Configuration Packages. **The order matters and they cannot be combined.**
+
+| # | Package | Contains |
+|---|---|---|
+| 1 | `IFS-STICKY-NOTES-LU.zip` | The `CStickyNotes` custom LU, its projection and projection config, and the `StickyNotes` Aurena page group |
+| 2 | `IFS-STICKY-NOTE-EVENT.zip` | The `C_STICKY_NOTE_NOTIFY` custom event and its e-mail action |
 
 Free to use. No licence key, no activation, nothing phones home.
 
-## Importing it
+## Why two, and why in this order
+
+The event's action condition and parameters reference the entity's columns —
+`CF$_NOTIFYTO`, `CF$_NOTIFYSUBJECT`, `CF$_NOTIFYBODY`. **Those columns do not exist until
+the custom LU has been published.** Publishing is what generates the table and the
+projection; importing the LU alone only defines it.
+
+Import both together, or import the event before publishing, and the import fails with:
+
+```
+Field [IMPORT_ID] is mandatory for Application Configuration Item Import
+and requires a value.
+```
+
+That message is misleading — `IMPORT_ID` is generated server-side by
+`App_Config_Import_API.Register_Import___`, so a null one means the import session was
+never created, not that anything is wrong with the file. The real cause is the event
+referring to columns that are not there yet.
+
+## Steps
 
 1. Open **Application Configuration Packages** (Solution Manager).
-2. **Import Configuration** → the import package assistant.
-3. Upload `STICKY-NOTES.zip`, review the items, apply.
-4. **Set the mail sender** — see below. Nothing warns you if this is wrong.
-5. **Grant the projection** — see below. This is the step people forget.
-6. **Add the page group to the Navigator** — optional, see below.
+2. **Import Configuration** → the import package assistant → upload
+   **`IFS-STICKY-NOTES-LU.zip`** → review → apply.
+3. **Publish the `CStickyNotes` custom logical unit.** This creates the table, the columns
+   and the projection. Do not skip or defer this — step 4 fails without it.
+4. Import **`IFS-STICKY-NOTE-EVENT.zip`** the same way.
+5. **Set the mail sender** — see below. Nothing warns you if this is wrong.
+6. **Grant the projection** — see below. This is the step people forget.
+7. **Add the page group to the Navigator** — optional, see below.
 
 Then have one user press **Check IFS setup** in the extension popup. It reports read and
 write separately, so a missing grant is distinguishable from a missing entity.
@@ -40,40 +66,28 @@ Add **`CustomProjectionCStickyNotes`** to the **basic permission set that every 
 already has** — the one assigned to all employees by default. Users need **read and
 write**.
 
-Sticky notes are a general-purpose tool like attachments or notes: anybody who can open a
-record should be able to leave one. Putting the grant in a special-purpose permission set
-means the feature quietly works for some colleagues and not others, and the person who
-cannot save a note has no way to tell why.
+Sticky notes are a general-purpose tool like attachments: anybody who can open a record
+should be able to leave one. Putting the grant in a special-purpose permission set means
+the feature quietly works for some colleagues and not others, and the person who cannot
+save a note has no way to tell why.
 
 Mentioning people also reads the standard person list, which essentially every user
 already has.
 
 ## Adding the page to the Navigator
 
-The package brings an Aurena page group — `StickyNotesList` and `StickyNotesPage` — for
-browsing notes inside IFS. **Importing it does not put it in the menu.** Open **Navigator
-Designer** (saved entries live under **Navigator Configurations**), add an entry pointing at
-the `StickyNotes` page group, and publish.
+`IFS-STICKY-NOTES-LU.zip` brings an Aurena page group — `StickyNotesList` and
+`StickyNotesPage` — for browsing notes inside IFS. **Importing it does not put it in the
+menu.** Open **Navigator Designer** (saved entries live under **Navigator
+Configurations**), add an entry pointing at the `StickyNotes` page group, and publish.
 
 This is optional: the extension does not use that page, and notes appear on record pages
-either way. It is for anyone who wants to search or review notes across records. If users
-cannot see the entry after publishing, check the permission set from the previous section
-also covers the page.
+either way. If users cannot see the entry after publishing, check the permission set from
+the previous section also covers the page.
 
-## What the package contains
+## How the e-mail fires
 
-| Item | Type | What it is |
-|---|---|---|
-| Custom Sticky Notes (`CStickyNotes`) | Custom LU | The 21-field entity notes are stored in |
-| `CustomProjectionCStickyNotes` | Custom projection | The REST endpoint the extension calls |
-| `CustomProjectionCStickyNotes` | Projection config | Generated alongside the projection |
-| `C_STICKY_NOTE_NOTIFY` | Custom event | Fires the mention e-mail |
-| `…-0-MAIL` | Event action | The e-mail itself |
-| `StickyNotes` | Aurena page group | `StickyNotesList` / `StickyNotesPage` — browse notes inside IFS |
-
-## How the e-mail actually fires
-
-Worth understanding before changing anything, because it is subtler than it looks.
+Worth understanding before changing anything.
 
 **The event** (`C_STICKY_NOTE_NOTIFY`) is AFTER-MODIFY only — not insert, not delete —
 with `MODIFIED_ATTRIBUTES = CF$_NOTIFYTO`. So it fires **only when `Cf_Notifyto` changes**.
@@ -108,12 +122,13 @@ action as plain text; say so and the extension will emit plain text instead.
 
 ## Re-exporting
 
-If the field list changes, re-export from a working environment: **Application
-Configuration Packages** → add the custom LU, projection, event, action and page group as
-items → export → replace this file. The `F` map in
-`extension/src/content/ifsStore.js` is the source of truth for what must exist.
+Keep the split. If the field list changes, re-export both from a working environment:
+**Application Configuration Packages** → build one package with the custom LU, projection
+and page group, and a second with the event and its action → export → replace these files.
+The `F` map in `extension/src/content/ifsStore.js` is the source of truth for what must
+exist.
 
 ## Versions
 
 Navigator wording moves between IFS releases, so page names above are a guide rather than
-an exact path. This package was exported from IFS Cloud 25.x.
+an exact path. These packages were exported from IFS Cloud 25.x.

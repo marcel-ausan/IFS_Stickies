@@ -444,7 +444,8 @@ window.SN = window.SN || {};
           // shows this text verbatim to whoever just enabled the site.
           report.hint =
             'The CStickyNotes custom entity was not found in this environment. ' +
-            'Import the Application Configuration Package supplied with the extension, ' +
+            'Import the entity configuration package supplied with the extension AND publish ' +
+            'the custom logical unit, ' +
             `then try again. (If it was imported, check that the projection is really ` +
             `named ${SVC} — correct SVC/SET at the top of ifsStore.js if not.)`;
           return report;

@@ -15,8 +15,8 @@ same-origin with your signed-in session. There is no server to install, run or h
 - A Chromium browser (Chrome/Edge)
 - The `CStickyNotes` custom entity in the target IFS environment — see
   [CLAUDE.md](CLAUDE.md) for the field list
-- Both come from `deploy/STICKY-NOTES.zip`, the Application Configuration Package — see
-  [deploy/README.md](deploy/README.md)
+- Both come from the two Application Configuration Packages in `deploy/`, which must be
+  imported **in order with a publish between them** — see [deploy/README.md](deploy/README.md)
 
 ## Install
 
@@ -74,7 +74,7 @@ extension/         Manifest V3 extension (no build step, no host permissions)
   src/content/      recordContext.js · config.js · mentions.js · ifsStore.js · content.js
   src/popup/        site access + settings + IFS setup check
   src/onboarding/   first-run setup page + administrator guide
-  assets/           STICKY-NOTES.zip, served by the admin page's download button
+  assets/           the two ACPs, served by the admin page's download buttons
   icons/            generated PNG icons
 deploy/            the same ACP, plus import and configuration notes
 test/              ifsStore.test.js  (npm run test:ifs)

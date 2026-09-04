@@ -174,6 +174,29 @@ numeric read is coerced.
 **Never add `$select` to a query.** Naming one field the LU does not have 400s the whole
 request. The server returns every column anyway. A test asserts no query contains one.
 
+### Two packages, in order, with a publish between them
+
+`deploy/` holds **two** ACPs and they cannot be combined:
+
+1. `IFS-STICKY-NOTES-LU.zip` — custom LU, projection, projection config, Aurena page group
+2. `IFS-STICKY-NOTE-EVENT.zip` — the custom event and its mail action
+
+**Import 1, publish the custom LU, then import 2.** The event's action parameters and
+condition reference `CF$_NOTIFYTO`, `CF$_NOTIFYSUBJECT` and `CF$_NOTIFYBODY`, and those
+columns do not exist until the LU is *published* — importing only defines it.
+
+Get the order wrong and the import fails with:
+
+```
+Field [IMPORT_ID] is mandatory for Application Configuration Item Import and requires a value.
+```
+
+That message sends you hunting through the zip, which is the wrong place entirely.
+`IMPORT_ID` is generated server-side — `rec_.import_id := Sys_Guid();` in
+`App_Config_Import_API.Register_Import___` ([AppConfigImport.plsql:112]) — so a null one
+means **the import session was never created**, not that the file is malformed. Nothing in
+the package content can cause it.
+
 **Writes must refresh their own etag.** A PATCH answers **204 with no body**, so nothing
 updated the cached `@odata.etag` and the *next* write failed 412 "Resource already
 modified" — silently, because `queueSave` only warned. Every edit after the first was
@@ -292,7 +315,7 @@ interpolates**, because note text is user input heading for a colleague's mail c
 Styles are inline; mail clients drop `<style>` blocks. If a future environment sends the
 body as text/plain the tags will appear literally — that is the signal to go back to `\n`.
 
-**The shipped event keys on `Cf_Notifyto` changing** — `deploy/STICKY-NOTES.zip`,
+**The shipped event keys on `Cf_Notifyto` changing** — `deploy/IFS-STICKY-NOTE-EVENT.zip`,
 `C_STICKY_NOTE_NOTIFY`, AFTER-MODIFY with `MODIFIED_ATTRIBUTES = CF$_NOTIFYTO`, plus an
 action condition `CF$_NOTIFYTO != null`. Ordinary note edits never write that column, which
 is why the 600 ms autosave does not mail anybody. A test asserts an ordinary edit writes no

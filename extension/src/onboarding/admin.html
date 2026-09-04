@@ -13,14 +13,18 @@
       <div class="wrap">
         <p class="backlink"><a href="onboarding.html">← Get started</a></p>
         <p class="eyebrow">Administrator setup</p>
-        <h1>Ten minutes, once per environment.</h1>
+        <h1>Fifteen minutes, once per environment.</h1>
         <p class="sub">
-          One configuration package to import, one permission set to update. No PL/SQL, no
-          scheduled job, no integration — and <b>no data leaves this environment</b>.
+          Two configuration packages — <b>in this order, with a publish between them</b> — and one
+          permission set to update. No PL/SQL, no scheduled job, no integration, and <b>no data
+          leaves this environment</b>.
         </p>
         <div class="cta">
-          <a class="btn" id="download" href="../../assets/STICKY-NOTES.zip" download="STICKY-NOTES.zip">
-            ↓ Download the package
+          <a class="btn" href="../../assets/IFS-STICKY-NOTES-LU.zip" download="IFS-STICKY-NOTES-LU.zip">
+            ↓ 1. Entity package
+          </a>
+          <a class="btn" href="../../assets/IFS-STICKY-NOTE-EVENT.zip" download="IFS-STICKY-NOTE-EVENT.zip">
+            ↓ 2. Event package
           </a>
           <button class="ghost" id="copyAll">Copy as text</button>
           <button class="ghost" id="print">Print / PDF</button>
@@ -43,10 +47,9 @@
           <div class="card">
             <div class="n">1</div>
             <div class="body">
-              <h3>Import the configuration package</h3>
+              <h3>Import the entity package</h3>
               <p>
-                <b>STICKY-NOTES.zip</b> is an Application Configuration Package — the download
-                button above.
+                <b>IFS-STICKY-NOTES-LU.zip</b> — the first download button above.
               </p>
               <ul class="ticks">
                 <li>Open <b>Application Configuration Packages</b> in Solution Manager.</li>
@@ -61,12 +64,53 @@
                     <tr><td>CStickyNotes</td><td>Custom LU</td><td>The 21-field entity notes are stored in</td></tr>
                     <tr><td>CustomProjectionCStickyNotes</td><td>Custom projection</td><td>The endpoint the extension calls</td></tr>
                     <tr><td>CustomProjectionCStickyNotes</td><td>Projection config</td><td>Generated with the projection</td></tr>
-                    <tr><td>C_STICKY_NOTE_NOTIFY</td><td>Custom event</td><td>Fires the mention e-mail</td></tr>
-                    <tr><td>…-0-MAIL</td><td>Event action</td><td>The e-mail itself</td></tr>
                     <tr><td>StickyNotes</td><td>Aurena page group</td><td>Browse notes inside IFS</td></tr>
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="card">
+            <div class="n">2</div>
+            <div class="body">
+              <h3>Publish the custom logical unit</h3>
+              <p>
+                Publish <b>CStickyNotes</b>. This is what actually creates the table, its columns
+                and the projection — importing only defines them.
+              </p>
+
+              <div class="flag stop">
+                <p>
+                  <b>Do not skip ahead to step 3.</b> The event package refers to the entity’s
+                  columns — <code>CF$_NOTIFYTO</code>, <code>CF$_NOTIFYSUBJECT</code>,
+                  <code>CF$_NOTIFYBODY</code> — and those do not exist until this publish has run.
+                </p>
+                <p>
+                  Importing the event first fails with
+                  <code>Field [IMPORT_ID] is mandatory for Application Configuration Item Import</code>,
+                  which is misleading: <code>IMPORT_ID</code> is generated server-side, so a null
+                  one means the import session was never created. Nothing is wrong with the file.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="card">
+            <div class="n">3</div>
+            <div class="body">
+              <h3>Import the event package</h3>
+              <p>
+                <b>IFS-STICKY-NOTE-EVENT.zip</b> — the second download button above. Same import
+                assistant. It brings <code>C_STICKY_NOTE_NOTIFY</code> and its e-mail action, which
+                are what send the <b>@</b>-mention notifications.
+              </p>
+              <p>
+                Skip this package entirely and everything else still works — notes save and
+                mentions are recorded, but nobody is e-mailed.
+              </p>
 
               <div class="flag stop">
                 <p>
@@ -89,9 +133,9 @@
             </div>
           </div>
 
-          <!-- 2 -->
+          <!-- 4 -->
           <div class="card">
-            <div class="n">2</div>
+            <div class="n">4</div>
             <div class="body">
               <h3>Grant the projection</h3>
               <p>
@@ -117,13 +161,13 @@
             </div>
           </div>
 
-          <!-- 3 -->
+          <!-- 5 -->
           <div class="card">
-            <div class="n">3</div>
+            <div class="n">5</div>
             <div class="body">
               <h3>Add the page to the Navigator</h3>
               <p>
-                The package brings an Aurena page group — <b>StickyNotesList</b> and
+                The entity package brings an Aurena page group — <b>StickyNotesList</b> and
                 <b>StickyNotesPage</b> — for browsing notes inside IFS. Importing it does
                 <em>not</em> put it in the menu.
               </p>
@@ -139,9 +183,9 @@
             </div>
           </div>
 
-          <!-- 4 -->
+          <!-- 6 -->
           <div class="card">
-            <div class="n">4</div>
+            <div class="n">6</div>
             <div class="body">
               <h3>Verify</h3>
               <p>
@@ -150,14 +194,14 @@
                 separately:
               </p>
               <ul class="ticks">
-                <li><b>Not found</b> — the package didn’t import; revisit step 1.</li>
-                <li><b>Read but not write</b> — the permission set in step 2 is missing the grant.</li>
+                <li><b>Not found</b> — the entity package did not import, or the LU was never published; revisit steps 1 and 2.</li>
+                <li><b>Read but not write</b> — the permission set in step 4 is missing the grant.</li>
                 <li><b>Both work</b> — the notes half is done.</li>
               </ul>
               <p style="margin-top:12px">
                 The probe does not test e-mail, so finish by having that user <b>@</b>-mention
                 somebody and press <b>✉ Notify</b>. If no mail arrives while everything else
-                works, the sender in step 1 is the first thing to check.
+                works, the sender in step 3 is the first thing to check.
               </p>
             </div>
           </div>
