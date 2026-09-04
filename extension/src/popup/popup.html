@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IFS Sticky Notes</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>IFS Sticky Notes</h1>
+
+    <!-- ── Site access ─────────────────────────────────────────────────── -->
+    <section class="panel">
+      <h2>Site access</h2>
+
+      <!-- not on an IFS page -->
+      <div id="siteNone" hidden>
+        <p class="msg">This isn’t an IFS Cloud page.</p>
+        <p class="hint">
+          Open your IFS Cloud tab, then click the extension icon again to enable it there.
+        </p>
+      </div>
+
+      <!-- on an IFS page, not yet enabled -->
+      <div id="siteOffer" hidden>
+        <p class="msg">Not enabled on <b id="offerHost"></b></p>
+
+        <div class="prereq">
+          <p class="prereq-title">This needs IFS configuration first</p>
+          <p>
+            Enabling access only lets the extension <em>run</em> on this site. It stores its notes
+            in IFS, so the environment must already have:
+          </p>
+          <ul>
+            <li>
+              the <b>CStickyNotes</b> custom entity — normally imported from the
+              <b>Application Configuration Package</b> supplied with the extension
+            </li>
+            <li>
+              a <b>Custom Event</b> on CStickyNotes with an <b>E-Mail action</b>, if you want
+              @-mention notifications to actually send
+            </li>
+            <li>your user granted access to the CStickyNotes projection</li>
+          </ul>
+          <p class="prereq-warn">
+            If the package hasn’t been imported, notes will not save. The check below tells you
+            either way.
+          </p>
+        </div>
+
+        <div class="privacy">
+          <p class="privacy-title">No data leaves your IFS environment</p>
+          <p>
+            Chrome is about to ask to “read and change your data” on this site. That is the only
+            permission that lets an extension draw notes on the page, and Chrome words it the same
+            way for every extension.
+          </p>
+          <p>
+            What this one actually does with it: notes are written to <b>CStickyNotes</b> in your
+            own IFS tenant, and people are looked up through your own IFS person list. There is no
+            server behind this extension, no analytics, no telemetry, and no other network call of
+            any kind.
+          </p>
+        </div>
+
+        <button id="enable">Enable on this site</button>
+      </div>
+
+      <!-- enabled -->
+      <div id="siteOn" hidden>
+        <p class="msg ok">Enabled on <b id="onHost"></b></p>
+        <p id="whoami" class="whoami"></p>
+        <div class="actions">
+          <button id="test" class="secondary">Check IFS setup</button>
+          <button id="revoke" class="secondary danger">Remove access</button>
+        </div>
+      </div>
+
+      <p id="status" class="status"></p>
+    </section>
+
+    <!-- ── Fallback identity ───────────────────────────────────────────── -->
+    <section class="panel" id="fallbackPanel">
+      <h2>Signed-in user</h2>
+      <p class="hint" id="fallbackWhy">
+        Your IFS (FND) user is read from your session and used to sign notes. Set an override only
+        if that detection fails.
+      </p>
+      <label for="userId">Override</label>
+      <input id="userId" type="text" placeholder="leave empty — detected automatically" />
+      <div class="actions">
+        <button id="save">Save</button>
+      </div>
+    </section>
+
+    <p class="hint">
+      <a href="#" id="guide">Open the setup guide</a>
+    </p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

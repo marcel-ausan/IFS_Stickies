@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IFS Sticky Notes — administrator setup</title>
+    <link rel="stylesheet" href="onboarding.css" />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <!-- ── hero ─────────────────────────────────────────────────────────── -->
+    <div class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Administrator setup</p>
+        <h1>Ten minutes, once per environment.</h1>
+        <p class="sub">
+          One configuration package to import, one permission set to update. No PL/SQL, no
+          scheduled job, no integration — and <b>no data leaves this environment</b>.
+        </p>
+        <div class="cta">
+          <a class="btn" id="download" href="../../assets/STICKY-NOTES.zip" download="STICKY-NOTES.zip">
+            ↓ Download the package
+          </a>
+          <button class="ghost" id="copyAll">Copy as text</button>
+          <button class="ghost" id="print">Print / PDF</button>
+        </div>
+        <p id="copyMsg" class="msg"></p>
+      </div>
+    </div>
+
+    <!-- ── steps ────────────────────────────────────────────────────────── -->
+    <section class="band">
+      <div class="wrap">
+        <h2>What to do</h2>
+        <p class="lede">
+          Navigator wording moves between IFS releases, so page names below are a guide rather
+          than an exact path.
+        </p>
+
+        <div class="steps">
+          <!-- 1 -->
+          <div class="card">
+            <div class="n">1</div>
+            <div class="body">
+              <h3>Import the configuration package</h3>
+              <p>
+                <b>STICKY-NOTES.zip</b> is an Application Configuration Package — the download
+                button above.
+              </p>
+              <ul class="ticks">
+                <li>Open <b>Application Configuration Packages</b> in Solution Manager.</li>
+                <li>Use <b>Import Configuration</b> → the import package assistant.</li>
+                <li>Upload the file, review the items, apply.</li>
+              </ul>
+
+              <div class="tablewrap">
+                <table>
+                  <thead><tr><th>Item</th><th>Type</th><th>What it is</th></tr></thead>
+                  <tbody>
+                    <tr><td>CStickyNotes</td><td>Custom LU</td><td>The 21-field entity notes are stored in</td></tr>
+                    <tr><td>CustomProjectionCStickyNotes</td><td>Custom projection</td><td>The endpoint the extension calls</td></tr>
+                    <tr><td>CustomProjectionCStickyNotes</td><td>Projection config</td><td>Generated with the projection</td></tr>
+                    <tr><td>C_STICKY_NOTE_NOTIFY</td><td>Custom event</td><td>Fires the mention e-mail</td></tr>
+                    <tr><td>…-0-MAIL</td><td>Event action</td><td>The e-mail itself</td></tr>
+                    <tr><td>StickyNotes</td><td>Aurena page group</td><td>Browse notes inside IFS</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="flag stop">
+                <p>
+                  <b>Then set a mail sender that exists here.</b> The event action ships with
+                  <code>$SENDER = EDI_MAIL_SENDER</code>, which is simply what the source
+                  environment used. <b>It is not a universal value</b> and very likely does not
+                  exist in yours.
+                </p>
+                <p>
+                  Open the imported event action <code>C_STICKY_NOTE_NOTIFY</code>, find
+                  <code>$SENDER</code> in its action parameters, and set it to a mail sender this
+                  environment actually has configured.
+                </p>
+                <p>
+                  Get this wrong and everything else still looks fine — notes save, mentions are
+                  recorded, the event fires — but no e-mail ever arrives, and nothing in the
+                  extension can tell you why.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="card">
+            <div class="n">2</div>
+            <div class="body">
+              <h3>Grant the projection</h3>
+              <p>
+                Add <code>CustomProjectionCStickyNotes</code> to the
+                <b>basic permission set that every user already has</b> — the one assigned to all
+                employees by default. Users need <b>read and write</b>.
+              </p>
+
+              <div class="flag stop">
+                <p>
+                  <b>Please don’t put this in a role-specific permission set.</b> Sticky notes are
+                  a general-purpose tool like attachments: anyone who can open a record should be
+                  able to leave one. A partial grant means the feature silently works for some
+                  colleagues and not others, and the person who cannot save a note has no way to
+                  tell why.
+                </p>
+              </div>
+
+              <p style="margin-top:14px">
+                Mentioning people also reads the standard person list, which essentially every
+                user already has.
+              </p>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="card">
+            <div class="n">3</div>
+            <div class="body">
+              <h3>Add the page to the Navigator</h3>
+              <p>
+                The package brings an Aurena page group — <b>StickyNotesList</b> and
+                <b>StickyNotesPage</b> — for browsing notes inside IFS. Importing it does
+                <em>not</em> put it in the menu.
+              </p>
+              <ul class="ticks">
+                <li>Open <b>Navigator Designer</b> (saved entries live under <b>Navigator Configurations</b>).</li>
+                <li>Add an entry pointing at the <b>StickyNotes</b> page group.</li>
+                <li>Publish the navigator configuration.</li>
+              </ul>
+              <p style="margin-top:12px">
+                Optional — the extension itself doesn’t use this page; notes appear on record pages
+                either way. It is for anyone who wants to review notes across records.
+              </p>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="card">
+            <div class="n">4</div>
+            <div class="body">
+              <h3>Verify</h3>
+              <p>
+                Ask one user to install the extension, enable it on this environment, and press
+                <b>Check IFS setup</b> in the extension popup. It reports read and write
+                separately:
+              </p>
+              <ul class="ticks">
+                <li><b>Not found</b> — the package didn’t import; revisit step 1.</li>
+                <li><b>Read but not write</b> — the permission set in step 2 is missing the grant.</li>
+                <li><b>Both work</b> — the notes half is done.</li>
+              </ul>
+              <p style="margin-top:12px">
+                The probe does not test e-mail, so finish by having that user <b>@</b>-mention
+                somebody and press <b>✉ Notify</b>. If no mail arrives while everything else
+                works, the sender in step 1 is the first thing to check.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── reference ────────────────────────────────────────────────────── -->
+    <section class="band alt">
+      <div class="wrap">
+        <h2>How the e-mail fires</h2>
+        <p class="lede">
+          Reference, beyond the sender in step 1. Worth reading before changing the event, because
+          it is subtler than it looks.
+        </p>
+
+        <div class="steps">
+          <div class="card">
+            <div class="n">i</div>
+            <div class="body">
+              <p>
+                The event <code>C_STICKY_NOTE_NOTIFY</code> is AFTER-MODIFY only, with
+                <code>MODIFIED_ATTRIBUTES = CF$_NOTIFYTO</code>. It fires <b>only when
+                <code>Cf_Notifyto</code> changes</b> — which is why typing in a note, saved every
+                few hundred milliseconds, doesn’t e-mail anybody.
+              </p>
+              <p>The action adds the condition <code>CF$_NOTIFYTO != null</code> and sends:</p>
+              <pre>$TO      = &amp;NEW:CF$_NOTIFYTO
+$SUBJECT = &amp;NEW:CF$_NOTIFYSUBJECT
+$MESSAGE = &amp;NEW:CF$_NOTIFYBODY
+$SENDER  = EDI_MAIL_SENDER   &lt;-- change this (step 1)</pre>
+              <p>
+                The extension composes the subject and body, including the deep link back to the
+                record, so wording changes never require touching IFS.
+              </p>
+              <ul class="ticks">
+                <li>
+                  <b><code>Cf_Notifytrigger</code> is written by the extension but not used by this
+                  event.</b> It carries a fresh timestamp per send — a ready-made hook if you ever
+                  want the event keyed on something that always changes.
+                </li>
+                <li>
+                  Because the event keys on <code>Cf_Notifyto</code> <em>changing</em>, two
+                  consecutive sends with an identical recipient list wouldn’t fire. The extension
+                  prevents that from the other side — <code>Cf_Notifiedto</code> accumulates
+                  everyone already told. <b>The two are complementary; don’t remove one because the
+                  other exists.</b>
+                </li>
+                <li>
+                  The body is <b>HTML</b>. If recipients see literal <code>&lt;p&gt;</code> tags,
+                  this environment sends the action as plain text — say so, and the extension will
+                  emit plain text instead.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="wrap">
+        <p>
+          Notes are stored only in this environment and are covered by its existing backup and
+          retention policy. Removing the extension does not delete them.
+        </p>
+        <p style="margin-top:12px">
+          Free and open source under the MIT licence. <b>Not affiliated with IFS AB.</b>
+          “IFS” and “IFS Cloud” are trademarks of IFS AB, used here only to describe what this
+          extension works with.
+        </p>
+      </div>
+    </footer>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "IFS Sticky Notes — Free & Open Source",
+  "version": "1.0.0",
+  "description": "Shared sticky notes on any IFS Cloud record. Free and open source — every note is stored in your own IFS, never on our servers.",
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "src/background/injector.js"
+  },
+  "action": {
+    "default_title": "IFS Sticky Notes",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

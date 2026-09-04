@@ -1,0 +1,11 @@
+{
+  "name": "ifs-sticky-notes",
+  "version": "1.0.0",
+  "description": "Shared sticky notes on any IFS Cloud record. Free and open source — every note is stored in your own IFS, never on our servers.",
+  "scripts": {
+    "test:ifs": "node test/ifsStore.test.js",
+    "icons": "node scripts/generate-icons.js"
+  },
+  "license": "MIT",
+  "author": "Marcel Ausan"
+}

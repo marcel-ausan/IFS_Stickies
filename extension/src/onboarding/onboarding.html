@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Set up IFS Sticky Notes</title>
+    <link rel="stylesheet" href="onboarding.css" />
+  </head>
+  <body>
+    <!-- ── hero ─────────────────────────────────────────────────────────── -->
+    <div class="hero">
+      <div class="wrap">
+        <!-- Lead with the differentiator, not the category: two paid competitors
+             already own the generic name. -->
+        <p class="eyebrow">Free &amp; open source</p>
+        <h1>Notes that live on the record.</h1>
+        <p class="sub">
+          Pin a note to a customer order, a work order, a part — anything with its own page.
+          Everyone on your team who opens that record sees it, and every note is stored in
+          <b>your own IFS environment</b>. No server, no third party, nothing to host.
+        </p>
+        <div class="cta">
+          <a class="btn" href="#enable">Get started</a>
+          <a class="btn ghost" href="admin.html">Administrator setup</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── steps ────────────────────────────────────────────────────────── -->
+    <section class="band">
+      <div class="wrap">
+        <h2>Your first note, in four steps</h2>
+        <p class="lede">Two of these are once-only. After that, writing a note is one click.</p>
+
+        <div class="steps">
+          <!-- 1 -->
+          <div class="card">
+            <div class="n">1</div>
+            <div class="body">
+              <h3>Pin the extension</h3>
+              <p>
+                Click the puzzle-piece icon in Chrome’s toolbar and pin <b>IFS Aurena Sticky
+                Notes</b>, so the popup is always one click away. You need it in the next step and
+                rarely after that.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2 — the grant -->
+          <div class="card" id="enable">
+            <div class="n">2</div>
+            <div class="body">
+              <h3>Allow it on your IFS site</h3>
+              <p>
+                The extension installs with <b>no access to any website at all</b>. Tell it where
+                your IFS Cloud lives and it will ask permission for that one address — nothing
+                else.
+              </p>
+
+              <div class="grant">
+                <label for="ifsUrl">Your IFS Cloud address</label>
+                <div class="row">
+                  <input
+                    id="ifsUrl"
+                    type="url"
+                    inputmode="url"
+                    placeholder="https://yourcompany.ifs.cloud"
+                    spellcheck="false"
+                  />
+                  <button id="grant">Allow</button>
+                </div>
+                <p id="grantMsg" class="msg"></p>
+              </div>
+
+              <ul class="sites" id="siteList"></ul>
+              <p class="none" id="noSites">Not enabled anywhere yet.</p>
+
+              <div class="flag">
+                <p>
+                  <b>Chrome will say “read and change your data”.</b> That is the only permission
+                  which lets any extension draw something on a page, and Chrome words it the same
+                  for every one of them.
+                </p>
+                <p>
+                  Nothing leaves your IFS environment. Notes are written to your own tenant, people
+                  are looked up in your own IFS person list, and there is no analytics, no
+                  telemetry and no other network call.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="card">
+            <div class="n">3</div>
+            <div class="body">
+              <h3>Open a record and write</h3>
+              <p>
+                Notes appear on <b>record pages</b> — a single customer order, a work order — not
+                on lobbies or list pages. Click the floating <b>📝</b> button, then <b>+</b>.
+              </p>
+              <ul class="ticks">
+                <li>It saves as you type. There is no Save button.</li>
+                <li>Drag the note by its top bar. Drag the 📝 button itself to move it aside.</li>
+                <li>Eight colours, from the dots on the note’s top bar.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="card">
+            <div class="n">4</div>
+            <div class="body">
+              <h3>Mention someone, and they hear about it</h3>
+              <p>
+                Type <b>@</b> and part of a name or user id — the search matches both. Picking
+                somebody <b>does not send anything yet</b>.
+              </p>
+              <p>
+                A <b>✉ Notify</b> button appears at the bottom of the note. Press it once the note
+                actually says what you mean, and everyone newly tagged gets an e-mail linking
+                straight back to this record. Delete an <code>@token</code> before pressing it and
+                that person is quietly un-tagged.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── admin handoff ────────────────────────────────────────────────── -->
+    <section class="band alt">
+      <div class="wrap">
+        <h2>One thing your IFS administrator does first</h2>
+        <p class="lede">
+          Notes are stored in IFS, so the environment needs somewhere to put them — a small
+          configuration package, imported once. Usually not the same person who installs the
+          extension.
+        </p>
+        <div class="cta">
+          <a class="btn" href="admin.html">Open the administrator setup</a>
+        </div>
+        <p class="lede" style="margin-top:20px">
+          That page has the package to download, the steps, and a <b>Copy as text</b> button for
+          pasting into a ticket. Until it is done notes will not save — the popup’s
+          <b>Check IFS setup</b> button says so plainly rather than failing silently.
+        </p>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="wrap">
+        <p>
+          Reopen this page any time from the extension popup. Access can be removed per site, and
+          notes already written stay in IFS.
+        </p>
+        <p style="margin-top:12px">
+          Free and open source under the MIT licence. <b>Not affiliated with IFS AB.</b>
+          “IFS” and “IFS Cloud” are trademarks of IFS AB, used here only to describe what this
+          extension works with.
+        </p>
+      </div>
+    </footer>
+
+    <script src="onboarding.js"></script>
+  </body>
+</html>
