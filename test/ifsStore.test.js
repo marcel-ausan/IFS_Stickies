@@ -209,7 +209,11 @@ const LIVE_ROW = {
   nb = lastBody();
   check('notify PATCHes the row (no action, no PL/SQL)', calls.at(-1).opts.method === 'PATCH');
   check('notify comma-joins recipients', nb.Cf_Notifyto === 'ARC-A,ARC-B');
-  check('subject names the record', nb.Cf_Notifysubject === "You were mentioned on ActiveWorkOrder (WoNo='1')", nb.Cf_Notifysubject);
+  check('subject names the record without key syntax', nb.Cf_Notifysubject === 'You were mentioned on ActiveWorkOrder 1', nb.Cf_Notifysubject);
+  // A composite key keeps every value, so the subject still identifies the row.
+  // Sent on a copy so the notified-list bookkeeping below is left alone.
+  await store.notifyMentions('NEWKEY1', ['ARC-C'], { ...note, keyRef: "(Contract='TEMA',WoNo='7')" });
+  check('composite key joins its values', lastBody().Cf_Notifysubject === 'You were mentioned on ActiveWorkOrder TEMA / 7', lastBody().Cf_Notifysubject);
   check('body carries the deep link', nb.Cf_Notifybody.includes('record=abc'));
   check('body carries the note text', nb.Cf_Notifybody.includes('please look @ARC-A'));
   check('body names the mentioner', nb.Cf_Notifybody.includes('ARC-JSMITH mentioned you'));
@@ -218,6 +222,11 @@ const LIVE_ROW = {
    * run-on paragraph with the separators showing as literal dashes. */
   check('body is HTML', nb.Cf_Notifybody.includes('<p>') && nb.Cf_Notifybody.includes('</div>'));
   check('deep link is an anchor', nb.Cf_Notifybody.includes('<a href="https://host'));
+  // The raw URL must not appear as visible text - an Aurena deep link is enormous.
+  check('link is labelled, not the raw URL',
+    nb.Cf_Notifybody.includes('See the record in IFS') &&
+    !nb.Cf_Notifybody.includes('>https://'),
+    nb.Cf_Notifybody.slice(nb.Cf_Notifybody.indexOf('<a'), nb.Cf_Notifybody.indexOf('</a>') + 4));
 
   const multi = store.buildMessage(
     { luName: 'LU', noteText: 'line one\nline two', updatedBy: 'ARC-M' },

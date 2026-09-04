@@ -387,9 +387,24 @@ window.SN = window.SN || {};
           (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
         );
 
+      /*
+       * "(OrderNo='C5934')" -> "C5934". A key reference is written for machines;
+       * a subject line reading "on CustomerOrder (OrderNo='C5934')" makes the
+       * reader pick the identifier out of syntax. Composite keys keep every
+       * value: "(Contract='TEMA',WoNo='7')" -> "TEMA / 7".
+       */
+      const keyLabel = (raw) => {
+        const values = String(raw || '').match(/'[^']*'/g);
+        if (values) {
+          const cleaned = values.map((v) => v.slice(1, -1)).filter(Boolean);
+          if (cleaned.length) return cleaned.join(' / ');
+        }
+        return String(raw || '').replace(/^\(|\)$/g, '').trim();
+      };
+
       const who = note.updatedBy || note.userId || 'Someone';
       const where = note.luName || note.recordKey || 'a record';
-      const key = note.keyRef ? ' ' + note.keyRef : '';
+      const key = note.keyRef ? ' ' + keyLabel(note.keyRef) : '';
       const link = note.pageUrl || (typeof location !== 'undefined' ? location.href : '');
 
       const text = String(note.noteText || '').trim() || '(empty)';
@@ -399,9 +414,21 @@ window.SN = window.SN || {};
         `<p>${esc(who)} mentioned you in a note on <b>${esc(where)}${esc(key)}</b>.</p>`
       ];
       if (link) {
-        // The URL is its own link text: if a client strips the anchor, the address
-        // is still readable and copyable.
-        parts.push(`<p><a href="${esc(link)}">${esc(link)}</a></p>`);
+        /*
+         * A labelled link, not the raw address. An Aurena deep link carries the
+         * page path, a base64 record key and usually a $filter, so printing it
+         * verbatim ran to four wrapped lines and dominated the message.
+         *
+         * This used to be the URL as its own link text, on the theory that a
+         * client stripping the anchor would still leave something copyable.
+         * Rendering was since confirmed in Outlook, so the anchor survives and
+         * that insurance is not worth the noise.
+         */
+        parts.push(
+          `<p><a href="${esc(link)}" ` +
+            'style="color:#b07d00;font-weight:600;text-decoration:underline;">' +
+            'See the record in IFS &rarr;</a></p>'
+        );
       }
       parts.push(
         '<p><b>Note:</b></p>',
