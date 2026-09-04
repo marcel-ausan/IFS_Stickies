@@ -181,6 +181,14 @@ request. The server returns every column anyway. A test asserts no query contain
 1. `IFS-STICKY-NOTES-LU.zip` — custom LU, projection, projection config, Aurena page group
 2. `IFS-STICKY-NOTE-EVENT.zip` — the custom event and its mail action
 
+**Every re-export must be run through `scripts\stamp-acp-metadata.ps1` before committing.**
+IFS writes the exporting environment into `<AUTHOR>` and `<ORIGIN>`, the import wizard
+shows both on its Validation Summary, and this repo is public — so an unstamped package
+puts a customer's environment name in front of every other customer. The script rewrites
+them, copies into `extension/assets/`, and exits non-zero if any environment reference
+survives. It edits in place; **never re-zip an ACP** — `Compress-Archive` writes backslash
+entry paths where IFS wrote forward slashes, and the import can reject that.
+
 **Import 1, publish the custom LU, then import 2.** The event's action parameters and
 condition reference `CF$_NOTIFYTO`, `CF$_NOTIFYSUBJECT` and `CF$_NOTIFYBODY`, and those
 columns do not exist until the LU is *published* — importing only defines it.

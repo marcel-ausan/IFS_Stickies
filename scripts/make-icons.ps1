@@ -1,7 +1,7 @@
 # Regenerates the extension's toolbar icons with the same motif as the store icon,
 # so the thing you see in the toolbar matches the thing you saw in the store.
 #
-# The "@" is dropped below 32px — at 16 it collapses into a smudge and the note
+# The "@" is dropped below 32px - at 16 it collapses into a smudge and the note
 # shape alone reads better.
 
 $ErrorActionPreference = 'Stop'

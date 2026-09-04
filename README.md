@@ -78,7 +78,7 @@ extension/         Manifest V3 extension (no build step, no host permissions)
   icons/            generated PNG icons
 deploy/            the same ACP, plus import and configuration notes
 test/              ifsStore.test.js  (npm run test:ifs)
-scripts/           PowerShell generators for the icons and store assets
+scripts/           stamp-acp-metadata.ps1 (run on EVERY ACP re-export) + asset generators
 store-assets/      128px store icon and 1280x800 screenshots for the listing
 ```
 

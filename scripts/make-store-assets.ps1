@@ -89,7 +89,7 @@ $fp.CloseFigure()
 $b = New-Object System.Drawing.SolidBrush((C '#d8c96a'))
 $g.FillPath($b, $fp); $b.Dispose(); $fp.Dispose()
 
-# "@" — says mentions, and stays legible when scaled down.
+# "@" - says mentions, and stays legible when scaled down.
 Text $g '@' 'Segoe UI' 46 1 $INK 44 36
 
 $g.Dispose()
@@ -129,7 +129,7 @@ $pen = New-Object System.Drawing.Pen($HAIR, 1); $g.DrawRectangle($pen, $card); $
 Text $g 'Customer Order' 'Segoe UI' 15 0 $TEXT3 100 200
 Text $g 'C130' 'Segoe UI' 30 1 $TEXT 100 222
 
-# generic field rows — labels plus value bars, so nothing here is real data
+# generic field rows - labels plus value bars, so nothing here is real data
 $labels = @('Customer', 'Site', 'Order Type', 'Wanted Delivery',
             'Currency', 'Status', 'Coordinator', 'Delivery Terms')
 $y = 292
@@ -168,7 +168,7 @@ for ($i = 7; $i -ge 0; $i--) {
   $pen.Dispose(); $b.Dispose()
   $dx -= 16
 }
-# PS 5.1 has no "`u{}" escape — it renders literally. Use the char code.
+# PS 5.1 has no "`u{}" escape - it renders literally. Use the char code.
 Text $g ([string][char]0x00D7) 'Segoe UI' 17 0 (C '#7a2e2e') ($nx + $nw - 26) ($ny + 4)
 
 # body text

@@ -128,6 +128,33 @@ and page group, and a second with the event and its action → export → replac
 The `F` map in `extension/src/content/ifsStore.js` is the source of truth for what must
 exist.
 
+### Then always run this — every export, without exception
+
+```
+powershell -ExecutionPolicy Bypass -File scripts\stamp-acp-metadata.ps1
+```
+
+**IFS stamps the exporting environment into every package it produces:**
+
+```xml
+<AUTHOR>dwre</AUTHOR>
+<ORIGIN>DWRECFG1-dwre-cfg</ORIGIN>
+```
+
+Both are shown to the administrator on the import wizard's **Validation Summary**, and
+this repository is public. Ship an unstamped package and a customer's environment name is
+on display to everyone who downloads it, and to every other customer who imports it.
+
+The script rewrites them to `marcel.ausan@gmail.com` / `opensource-for-community`, copies
+the result into `extension/assets/` (which is what the admin page's download buttons
+serve), and **fails loudly if any environment reference survives** — descriptions and
+export comments can carry one too, and those it will not rewrite for you because they may
+be meaningful.
+
+It edits the XML in place inside the zip rather than re-zipping. `Compress-Archive` on
+Windows writes backslash entry paths where IFS wrote forward slashes, and a re-zipped
+package can fail to import. Running it twice is safe.
+
 ## Versions
 
 Navigator wording moves between IFS releases, so page names above are a guide rather than
