@@ -4,8 +4,11 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# Build artefact — attach it to a GitHub Release instead of committing it.
-ifs-sticky-notes-*.zip
+# Build artefact - attach it to a GitHub Release instead of committing it.
+# Anchored to the repo root and requiring a digit, because git on Windows matches
+# ignore patterns CASE-INSENSITIVELY: the old `ifs-sticky-notes-*.zip` also matched
+# deploy/IFS-STICKY-NOTES-LU.zip and silently kept the entity package out of the repo.
+/ifs-sticky-notes-[0-9]*.zip
 
 # The raw capture still contains real customer data (name, site, order no).
 # Only the masked composite in store-assets/ may be published.
