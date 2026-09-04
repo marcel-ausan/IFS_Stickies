@@ -4,14 +4,16 @@
  * First-run setup page, opened once on install.
  *
  * It exists because a fresh install does nothing visible: the extension holds no
- * host permissions, and even once granted it needs CStickyNotes to exist in the
- * customer's IFS environment. Without this page the first experience is a button
- * that never appears, followed by one that errors.
+ * host permissions, and even once granted the notes need CStickyNotes to exist in
+ * the customer's IFS environment. Without this page the first experience is a
+ * button that never appears, followed by one that errors.
  *
- * Unlike the popup, this page has no active IFS tab to read an origin from, so
- * the user types their IFS address and we request permission for exactly that
- * origin. chrome.permissions.request() needs a user gesture, which the button
- * click supplies.
+ * GRANTING DOES NOT HAPPEN HERE. The popup has activeTab, so when the user is on
+ * their IFS tab it already knows the origin and can offer "Enable on this site"
+ * with nothing to type. This page used to carry an address field as a fallback;
+ * it was removed, because asking someone to paste a URL the extension can read
+ * itself is work we invented. This page only reports which sites are enabled and
+ * lets them be removed.
  */
 
 const $ = (id) => document.getElementById(id);
@@ -20,25 +22,6 @@ function setMsg(text, kind) {
   const el = $('grantMsg');
   el.textContent = text || '';
   el.className = 'msg' + (kind ? ' ' + kind : '');
-}
-
-/*
- * Accept what people actually paste: a bare host, a full Aurena deep link, with
- * or without a scheme. Everything after the origin is discarded — permission is
- * per-origin, and the content script is narrowed to the Aurena path separately.
- */
-function toOrigin(raw) {
-  const text = String(raw || '').trim();
-  if (!text) return null;
-  const withScheme = /^https?:\/\//i.test(text) ? text : 'https://' + text;
-  try {
-    const u = new URL(withScheme);
-    if (u.protocol !== 'https:') return null; // IFS Cloud is https; http would be a typo
-    if (!u.hostname || u.hostname.indexOf('.') === -1) return null;
-    return u.origin;
-  } catch (_) {
-    return null;
-  }
 }
 
 async function grantedOrigins() {
@@ -81,52 +64,12 @@ async function refresh() {
   });
 }
 
-async function grant() {
-  const origin = toOrigin($('ifsUrl').value);
-  if (!origin) {
-    setMsg('That doesn’t look like a web address. Try something like https://yourcompany.ifs.cloud', 'err');
-    return;
-  }
+/*
+ * Keep the list live: the user is told to enable the site from the popup, which
+ * happens in another window while this page is still open. Without this they
+ * would be looking at a stale "Not enabled anywhere yet".
+ */
+chrome.permissions.onAdded.addListener(() => refresh());
+chrome.permissions.onRemoved.addListener(() => refresh());
 
-  const pattern = origin + '/*';
-  let ok = false;
-  try {
-    ok = await chrome.permissions.request({ origins: [pattern] });
-  } catch (err) {
-    setMsg('Could not request access: ' + err.message, 'err');
-    return;
-  }
-
-  if (!ok) {
-    setMsg('Access was declined, so the extension still won’t run there.', 'err');
-    return;
-  }
-
-  // permissions.onAdded already queues registration in the worker; this is just
-  // the faster path, and both are serialised there.
-  try {
-    await chrome.runtime.sendMessage({ type: 'sn-sync-sites' });
-  } catch (_) {
-    /* the worker reconciles on its own */
-  }
-
-  await refresh();
-  setMsg('Enabled. Open a record page there and look for the 📝 button.', 'ok');
-}
-
-$('grant').addEventListener('click', grant);
-
-$('ifsUrl').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') grant();
-});
-
-// Prefill from an open IFS tab, if we happen to have access to one already.
-(async () => {
-  try {
-    const tabs = await chrome.tabs.query({ url: '*://*/main/ifsapplications/web/*' });
-    if (tabs && tabs.length) $('ifsUrl').value = new URL(tabs[0].url).origin;
-  } catch (_) {
-    /* needs host access we may not have; the field just stays empty */
-  }
-  await refresh();
-})();
+refresh();

@@ -52,28 +52,26 @@
             <div class="body">
               <h3>Allow it on your IFS site</h3>
               <p>
-                The extension installs with <b>no access to any website at all</b>. Tell it where
-                your IFS Cloud lives and it will ask permission for that one address — nothing
-                else.
+                The extension installs with <b>no access to any website at all</b>, so it needs
+                permission for your IFS address — and nothing else.
+              </p>
+              <ul class="ticks">
+                <li>Open your IFS Cloud in a tab and sign in as usual.</li>
+                <li>Click the extension icon. It recognises the site you are on.</li>
+                <li>Press <b>Enable on this site</b> and accept Chrome’s prompt.</li>
+              </ul>
+              <p>
+                No typing, and no need to reload — the notes appear on the tab you are already
+                looking at.
               </p>
 
-              <div class="grant">
-                <label for="ifsUrl">Your IFS Cloud address</label>
-                <div class="row">
-                  <input
-                    id="ifsUrl"
-                    type="url"
-                    inputmode="url"
-                    placeholder="https://yourcompany.ifs.cloud"
-                    spellcheck="false"
-                  />
-                  <button id="grant">Allow</button>
-                </div>
-                <p id="grantMsg" class="msg"></p>
-              </div>
-
+              <!-- No address field here, deliberately. The popup already knows which
+                   site you are on (activeTab), so asking anyone to type or paste a URL
+                   is work the extension can do itself. Granting lives entirely there;
+                   this page only reports the result. -->
               <ul class="sites" id="siteList"></ul>
               <p class="none" id="noSites">Not enabled anywhere yet.</p>
+              <p id="grantMsg" class="msg"></p>
 
               <div class="flag">
                 <p>

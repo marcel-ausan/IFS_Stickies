@@ -3,30 +3,41 @@
  *
  * System fonts only, deliberately: a webfont request would be a call to a third
  * party, and both the privacy policy and the popup promise there are no network
- * calls beyond the customer's own IFS. Segoe UI Variable gets close enough to a
- * geometric display face on the Windows machines these users are on.
+ * calls beyond the customer's own IFS.
  *
- * Single light theme by choice. The design commits to the note-yellow, and every
- * colour is painted explicitly so it holds whatever the browser's theme is.
+ * Identity comes from the product rather than the category — a dark ink ground,
+ * a serif voice, and the eight real note colours as the only chromatic accent.
+ * Deliberately not a yellow slab with hard offset shadows; that is what every
+ * other extension in this category looks like.
+ *
+ * Single light theme by choice, with every colour painted explicitly so the page
+ * holds whatever the browser's theme is.
  */
 
 :root {
-  --yellow: #f6c324;
-  --yellow-deep: #e0ad0c;
-  --ink: #121212;
-  --ink-2: #444649;
-  --ink-3: #75787d;
-  --ground: #f1f1ef;
+  --ink: #16181d;
+  --ink-soft: #232630;
+  --paper: #f7f6f3;
   --surface: #ffffff;
-  --line: #121212;
-  --hair: #dcdcd8;
-  --ok: #12693c;
-  --err: #a5231f;
+  --text: #1b1d22;
+  --text-2: #55585f;
+  --text-3: #86888f;
+  --hair: #e4e2dc;
+  --hair-strong: #cdcac2;
 
-  --display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system,
-    "Helvetica Neue", Arial, sans-serif;
-  --body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system,
-    "Helvetica Neue", Arial, sans-serif;
+  --amber: #f5b301;
+  --amber-deep: #b07d00;
+  --amber-wash: #fdf4dc;
+
+  --ok: #14663c;
+  --err: #a3231e;
+
+  /* The note palette, used as the page's signature stripe. */
+  --c1: #fff7a8; --c2: #ffd8a8; --c3: #ffd1dc; --c4: #e6d5ff;
+  --c5: #bfe3ff; --c6: #c3f2ef; --c7: #c8f7c5; --c8: #e4e6ea;
+
+  --display: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   --mono: "Cascadia Mono", Consolas, "SF Mono", monospace;
 }
 
@@ -34,226 +45,206 @@
 
 body {
   margin: 0;
-  background: var(--ground);
-  color: var(--ink);
+  background: var(--paper);
+  color: var(--text);
   font-family: var(--body);
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 16.5px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 
-.wrap { max-width: 900px; margin: 0 auto; padding: 0 28px; }
+.wrap { max-width: 820px; margin: 0 auto; padding: 0 28px; }
 
 /* ---------- hero ---------- */
 
 .hero {
-  background: var(--yellow);
-  border-bottom: 3px solid var(--ink);
-  padding: 60px 0 56px;
+  background: var(--ink);
+  color: #f2f1ee;
+  padding: 66px 0 58px;
+  position: relative;
+}
+/* Eight note colours — the one ornament, and it comes from the product. */
+.hero::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 5px;
+  background: linear-gradient(to right,
+    var(--c1) 0 12.5%, var(--c2) 12.5% 25%, var(--c3) 25% 37.5%, var(--c4) 37.5% 50%,
+    var(--c5) 50% 62.5%, var(--c6) 62.5% 75%, var(--c7) 75% 87.5%, var(--c8) 87.5% 100%);
 }
 .eyebrow {
-  display: inline-block;
-  background: var(--ink);
-  color: var(--yellow);
-  font-family: var(--display);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .18em;
+  font-family: var(--body);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .2em;
   text-transform: uppercase;
-  padding: 7px 14px;
-  border-radius: 100px;
-  margin: 0 0 22px;
+  color: var(--amber);
+  margin: 0 0 20px;
 }
 .hero h1 {
   font-family: var(--display);
-  font-weight: 800;
-  font-size: clamp(2.4rem, 6vw, 3.6rem);
-  line-height: 1.02;
-  letter-spacing: -.033em;
+  font-weight: 400;
+  font-size: clamp(2.3rem, 5.4vw, 3.3rem);
+  line-height: 1.12;
+  letter-spacing: -.012em;
   margin: 0 0 20px;
-  max-width: 16ch;
+  max-width: 18ch;
   text-wrap: balance;
 }
 .hero .sub {
-  font-size: 1.14rem;
+  font-size: 1.08rem;
   margin: 0;
-  max-width: 54ch;
-  color: #2c2a1e;
+  max-width: 56ch;
+  color: #c8c9cd;
 }
-.hero .sub b { font-weight: 700; color: var(--ink); }
+.hero .sub b { color: #ffffff; font-weight: 600; }
 
-.cta { display: flex; gap: 14px; flex-wrap: wrap; margin: 30px 0 0; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 32px 0 0; }
 
 /* ---------- buttons ---------- */
 
 button, .btn {
-  font-family: var(--display);
-  font-size: 16px;
-  font-weight: 700;
-  padding: 14px 26px;
-  border: 2px solid var(--ink);
-  border-radius: 10px;
-  background: var(--ink);
-  color: var(--yellow);
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border: 1px solid var(--amber);
+  border-radius: 4px;
+  background: var(--amber);
+  color: #3a2a00;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  box-shadow: 4px 4px 0 rgba(18, 18, 18, .9);
-  transition: transform .06s ease, box-shadow .06s ease;
+  transition: background .12s ease, border-color .12s ease, color .12s ease;
 }
-button:hover, .btn:hover { transform: translate(1px, 1px); box-shadow: 3px 3px 0 rgba(18,18,18,.9); }
-button:active, .btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 rgba(18,18,18,.9); }
-button:focus-visible, .btn:focus-visible { outline: 3px solid #1a5fd0; outline-offset: 2px; }
+button:hover, .btn:hover { background: #ffc42e; border-color: #ffc42e; }
+button:focus-visible, .btn:focus-visible { outline: 2px solid #4a8cff; outline-offset: 2px; }
 
-.btn.ghost, button.ghost { background: var(--surface); color: var(--ink); }
-button.small { font-size: 14px; padding: 9px 16px; box-shadow: 3px 3px 0 rgba(18,18,18,.9); }
-button.plain {
-  background: none; border: none; box-shadow: none; color: var(--err);
-  font-size: 14px; padding: 4px 8px; text-decoration: underline;
+.btn.ghost, button.ghost {
+  background: transparent;
+  color: inherit;
+  border-color: currentColor;
+  opacity: .85;
 }
-button.plain:hover { transform: none; box-shadow: none; }
+.btn.ghost:hover, button.ghost:hover { background: rgba(255,255,255,.08); opacity: 1; }
+.band .btn.ghost, .band button.ghost { color: var(--text); border-color: var(--hair-strong); }
+.band .btn.ghost:hover, .band button.ghost:hover { background: var(--surface); }
+
+button.plain {
+  background: none; border: none; color: var(--err);
+  font-size: 13.5px; font-weight: 600; padding: 4px 6px; text-decoration: underline;
+}
+button.plain:hover { background: none; }
 
 /* ---------- sections ---------- */
 
-section.band { padding: 54px 0; }
-section.band.alt { background: var(--surface); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
+section.band { padding: 56px 0; }
+section.band.alt { background: var(--surface); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
 
 h2 {
   font-family: var(--display);
-  font-weight: 800;
-  font-size: clamp(1.6rem, 3.4vw, 2.1rem);
-  letter-spacing: -.024em;
-  line-height: 1.1;
+  font-weight: 400;
+  font-size: clamp(1.55rem, 3.2vw, 2rem);
+  letter-spacing: -.01em;
+  line-height: 1.2;
   margin: 0 0 10px;
   text-wrap: balance;
 }
-.band > .wrap > .lede {
-  margin: 0 0 30px;
-  color: var(--ink-2);
-  max-width: 62ch;
-}
+.band > .wrap > .lede { margin: 0 0 32px; color: var(--text-2); max-width: 62ch; }
 
 h3 {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 1.16rem;
-  letter-spacing: -.012em;
+  font-family: var(--body);
+  font-weight: 650;
+  font-size: 1.05rem;
+  letter-spacing: -.002em;
   margin: 0 0 6px;
 }
 
 p { margin: 0 0 14px; }
 p:last-child { margin-bottom: 0; }
-a { color: #8a5c00; font-weight: 600; }
+a { color: var(--amber-deep); font-weight: 600; }
 
 code {
   font-family: var(--mono);
-  font-size: .86em;
-  background: var(--ground);
-  border: 1px solid var(--hair);
-  border-radius: 4px;
-  padding: 1px 6px;
+  font-size: .85em;
+  background: var(--amber-wash);
+  border: 1px solid #efe2bd;
+  border-radius: 3px;
+  padding: 1px 5px;
 }
 
 /* ---------- step cards ---------- */
 
-.steps { display: grid; gap: 16px; }
+.steps { display: grid; gap: 14px; }
 .card {
   background: var(--surface);
-  border: 2px solid var(--ink);
-  border-radius: 14px;
-  box-shadow: 5px 5px 0 rgba(18, 18, 18, .92);
+  border: 1px solid var(--hair);
+  border-left: 3px solid var(--amber);
+  border-radius: 6px;
   padding: 22px 26px;
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 34px 1fr;
   gap: 18px;
   align-items: start;
 }
-section.band.alt .card { background: var(--ground); }
+section.band.alt .card { background: var(--paper); }
 .card .n {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  border: 2px solid var(--ink);
-  background: var(--yellow);
   font-family: var(--display);
-  font-weight: 800; font-size: 16px;
-  line-height: 34px; text-align: center;
-  flex: none;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--amber-deep);
+  text-align: right;
 }
-.card .body p { color: var(--ink-2); }
-.card .body p b, .card .body p strong { color: var(--ink); }
+.card .body p { color: var(--text-2); }
+.card .body p b, .card .body p strong { color: var(--text); font-weight: 600; }
 
-ul.ticks { margin: 6px 0 0; padding-left: 20px; color: var(--ink-2); }
+ul.ticks { margin: 8px 0 0; padding-left: 18px; color: var(--text-2); }
 ul.ticks li { margin-bottom: 7px; }
-ul.ticks li b { color: var(--ink); }
+ul.ticks li b { color: var(--text); font-weight: 600; }
 
 /* ---------- inline note / warning ---------- */
 
 .flag {
-  border: 2px solid var(--ink);
-  border-radius: 12px;
-  background: var(--yellow);
-  padding: 16px 20px;
+  border: 1px solid #efe2bd;
+  border-left: 3px solid var(--amber);
+  border-radius: 5px;
+  background: var(--amber-wash);
+  padding: 15px 18px;
   margin: 18px 0 0;
-  font-size: 15.5px;
+  font-size: 15px;
 }
-.flag.stop { background: #ffe1df; }
-.flag b { font-weight: 700; }
-
-/* ---------- grant control ---------- */
-
-.grant { margin: 16px 0 0; }
-.grant label {
-  display: block;
-  font-family: var(--display);
-  font-size: 13px; font-weight: 700;
-  letter-spacing: .04em; text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.grant .row { display: flex; gap: 12px; flex-wrap: wrap; }
-.grant input {
-  flex: 1 1 260px;
-  padding: 13px 15px;
-  font-size: 16px;
-  font-family: var(--body);
-  border: 2px solid var(--ink);
-  border-radius: 10px;
-  background: var(--surface);
-  color: var(--ink);
-}
-.grant input:focus-visible { outline: 3px solid #1a5fd0; outline-offset: 1px; }
-
-.msg { margin: 12px 0 0; font-size: 15px; min-height: 1.2em; font-weight: 600; }
-.msg.ok { color: var(--ok); }
-.msg.err { color: var(--err); }
+.flag.stop { background: #fdf0ef; border-color: #f0d3d1; border-left-color: var(--err); }
+.flag b { font-weight: 650; }
 
 /* ---------- enabled sites ---------- */
 
-.sites { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+.sites { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
 .sites li {
   display: flex; align-items: center; justify-content: space-between; gap: 14px;
-  background: var(--surface);
-  border: 2px solid var(--ink);
-  border-radius: 10px;
-  padding: 10px 12px 10px 16px;
-  font-size: 15px;
+  background: var(--paper);
+  border: 1px solid var(--hair);
+  border-radius: 5px;
+  padding: 9px 10px 9px 14px;
+  font-size: 14.5px;
 }
-.sites .host { font-weight: 700; word-break: break-all; }
-.sites .host::before { content: "●"; color: var(--ok); margin-right: 10px; }
-.none { color: var(--ink-3); margin: 14px 0 0; font-size: 15px; }
+section.band.alt .sites li { background: var(--surface); }
+.sites .host { font-weight: 600; word-break: break-all; }
+.sites .host::before { content: "●"; color: var(--ok); margin-right: 9px; font-size: 11px; vertical-align: 1px; }
+.none { color: var(--text-3); margin: 14px 0 0; font-size: 14.5px; }
 
 /* ---------- footer ---------- */
 
 footer.foot {
-  padding: 34px 0 60px;
-  color: var(--ink-3);
-  font-size: 14.5px;
+  padding: 34px 0 64px;
+  color: var(--text-3);
+  font-size: 14px;
 }
 footer.foot p { max-width: 70ch; }
 
 @media (max-width: 620px) {
   body { font-size: 16px; }
-  .card { grid-template-columns: 1fr; gap: 10px; }
-  .hero { padding: 44px 0 40px; }
+  .card { grid-template-columns: 1fr; gap: 6px; }
+  .card .n { text-align: left; }
+  .hero { padding: 46px 0 42px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

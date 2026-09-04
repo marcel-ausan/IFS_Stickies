@@ -2,42 +2,47 @@
 
 .tablewrap {
   overflow-x: auto;
-  border: 2px solid var(--ink);
-  border-radius: 10px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
   background: var(--surface);
   margin: 16px 0 0;
 }
-section.band.alt .tablewrap { background: var(--ground); }
+section.band.alt .tablewrap { background: var(--paper); }
 
-table { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 14.5px; }
+table { border-collapse: collapse; width: 100%; min-width: 580px; font-size: 14px; }
 th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--hair); }
 thead th {
-  font-family: var(--display);
-  font-size: 11.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-  background: var(--yellow);
-  border-bottom: 2px solid var(--ink);
+  font-family: var(--body);
+  font-size: 11px; font-weight: 650; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--text-3);
+  background: var(--paper);
+  border-bottom: 1px solid var(--hair-strong);
   white-space: nowrap;
 }
+section.band.alt thead th { background: var(--surface); }
 tbody tr:last-child td { border-bottom: 0; }
-tbody td:first-child { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+tbody td:first-child { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; color: var(--text); }
 
 pre {
   background: var(--ink);
-  color: #f4f4f2;
-  border-radius: 10px;
+  color: #eceae6;
+  border-radius: 6px;
   padding: 14px 16px;
   overflow-x: auto;
   font-family: var(--mono);
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 12.5px;
+  line-height: 1.6;
   margin: 0 0 14px;
 }
 
 @media print {
-  .hero { background: #fff; border-bottom: 2px solid #000; }
+  .hero { background: #fff; color: #000; border-bottom: 1px solid #000; padding: 0 0 18px; }
+  .hero::after { display: none; }
+  .hero h1, .hero .sub { color: #000; }
+  .eyebrow { color: #000; }
   .cta, #copyMsg { display: none; }
   body { background: #fff; font-size: 11pt; }
-  .card { box-shadow: none; break-inside: avoid; }
+  .card { break-inside: avoid; border-left-color: #000; }
   section.band.alt { background: #fff; }
   pre { background: #f2f2f2; color: #000; border: 1px solid #999; }
 }
