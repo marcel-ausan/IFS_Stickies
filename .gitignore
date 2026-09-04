@@ -13,3 +13,4 @@ Thumbs.db
 # The raw capture still contains real customer data (name, site, order no).
 # Only the masked composite in store-assets/ may be published.
 store-assets/source-capture.png
+store-assets/source-capture-2.png
