@@ -95,6 +95,9 @@ https://github.com/marcel-ausan/IFS_Stickies
 Questions, bugs and setup help:
 https://github.com/marcel-ausan/IFS_Stickies/issues
 
+Built by Marcel Ausan, IFS Cloud consultant. Available for setup, configuration and
+custom work: https://www.linkedin.com/in/marcelausan
+
 Not affiliated with, endorsed by, or sponsored by IFS AB. "IFS" is a trademark of its
 respective owner and is used here only to describe what this extension works with.
 ```
@@ -116,13 +119,16 @@ respective owner and is used here only to describe what this extension works wit
 | Field | Value |
 |---|---|
 | Homepage | `https://github.com/marcel-ausan/IFS_Stickies` |
-| Support | `https://www.linkedin.com/in/marcelausan/` |
+| Support | `https://github.com/marcel-ausan/IFS_Stickies/issues` |
 
-The support URL points at LinkedIn deliberately: the audience is IFS consultants and
-administrators, and the commercial plan is services rather than a licence, so a route to a
-person is worth more than a bug tracker. The gap is that LinkedIn will not accept a message
-from someone who is not a connection without InMail — so the description carries the GitHub
-Issues link as well, which needs no relationship and is public and searchable.
+**Do not put LinkedIn here.** The dashboard refuses to publish with
+`Support URL is not reachable`: LinkedIn redirects the trailing slash and then serves an
+authentication wall to unauthenticated crawlers, so Google's checker never sees a page.
+Verified 5 September 2026 — GitHub returns 200, LinkedIn does not.
+
+The intent behind LinkedIn was right, though: the audience is IFS consultants and
+administrators and the plan is services rather than a licence, so a route to a person is
+worth having. It lives in the description instead, where nothing is fetched or checked.
 
 **Mature content:** No
 
