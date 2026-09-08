@@ -1,5 +1,17 @@
 # Chrome Web Store listing
 
+**Published 5 September 2026.** Item ID `diafnecnokmhoenknpmgkcldigkgghmf`, visibility
+Public.
+
+```
+https://chromewebstore.google.com/detail/diafnecnokmhoenknpmgkcldigkgghmf
+```
+
+The direct link works the moment an item is published. Store *search* does not — indexing
+takes hours to a few days, and a new item with no installs ranks near the bottom for a
+generic phrase like "sticky notes" regardless. Not being findable by search on day one is
+expected, not a fault in the listing.
+
 Everything the dashboard asks for, ready to paste. Keep this in sync with
 `extension/manifest.json` — the store takes the item name and summary from there, not
 from this file.
