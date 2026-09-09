@@ -176,16 +176,14 @@
     .note .del:hover { background: rgba(122,46,46,.09); border-color: rgba(122,46,46,.65); }
     .note .del:active { transform: translateY(1px); }
     /*
-     * Minimised: the header stays, everything else folds away. The note keeps its
-     * stored width and height — see the guard in makeResizeObserved, which would
-     * otherwise persist the folded height and leave a 28px note after a reload.
-     * The !important beats the inline height/resize that renderNote writes.
+     * Hidden one at a time, by the note's own – button. Same disappearance as the
+     * sticky button's show/hide, which is what brings them back — a per-note way
+     * back would have to live somewhere on a note that is no longer on screen.
+     *
+     * display:none also makes the ResizeObserver fire at 0x0; its zero guard
+     * already drops that, so nothing persists a zero size.
      */
-    .note.collapsed {
-      height: 28px !important; min-height: 0; resize: none !important;
-    }
-    .note.collapsed textarea,
-    .note.collapsed .footrow { display: none; }
+    .note.note-hidden { display: none; }
     .note textarea {
       flex: 1; border: none; outline: none; resize: none; background: transparent;
       padding: 8px; font-size: 13px; color: #222; line-height: 1.35;
@@ -245,7 +243,7 @@
     if (who) parts.push('as ' + who);
     const n = state.notes.length;
     parts.push(n ? `${n} note${n === 1 ? '' : 's'}` : 'no notes');
-    parts.push('click: show/hide · + : new note · drag to move');
+    parts.push('click: show/hide (also un-hides single notes) · + : new note · drag to move');
     fab.title = parts.join('  —  ');
   }
 
@@ -421,6 +419,7 @@
   function renderNote(note) {
     const el = document.createElement('div');
     el.className = 'note';
+    if (note._hidden) el.classList.add('note-hidden'); // survives a re-render, not a reload
     el.style.left = note.posX + 'px';
     el.style.top = note.posY + 'px';
     el.style.width = note.width + 'px';
@@ -485,11 +484,12 @@
     const fold = document.createElement('button');
     fold.className = 'fold';
     fold.textContent = '–';
-    fold.title = 'Minimise';
+    fold.title = 'Hide this note — the sticky button brings it back';
     fold.addEventListener('click', () => {
-      const collapsed = el.classList.toggle('collapsed');
-      fold.textContent = collapsed ? '+' : '–';
-      fold.title = collapsed ? 'Expand' : 'Minimise';
+      // One-way from here: once the note is gone so is its button, so the way
+      // back is the sticky button, which clears every note's hidden flag.
+      note._hidden = true;
+      el.classList.add('note-hidden');
     });
     head.appendChild(fold);
 
@@ -626,7 +626,6 @@
         return; // ignore the initial observation — only genuine user resizes should persist
       }
       if (!el.isConnected) return; // ignore fires caused by detaching during re-render
-      if (el.classList.contains('collapsed')) return; // folding is not a resize
       const w = Math.round(el.offsetWidth);
       const h = Math.round(el.offsetHeight);
       if (!w || !h) return; // ignore transient zero sizes
@@ -871,6 +870,16 @@
 
   function toggleVisibility() {
     state.visible = !state.visible;
+    /*
+     * Showing is also the way back for notes hidden one at a time — that button
+     * disappears with its own note, so this is the only control left. Without
+     * clearing the flags, a note hidden individually would stay invisible while
+     * the layer claimed to be showing everything.
+     */
+    if (state.visible) {
+      state.notes.forEach((n) => { n._hidden = false; });
+      layer.querySelectorAll('.note-hidden').forEach((n) => n.classList.remove('note-hidden'));
+    }
     layer.classList.toggle('notes-hidden', !state.visible);
     updateTooltip();
   }
