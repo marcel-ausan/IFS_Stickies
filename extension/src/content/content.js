@@ -869,13 +869,21 @@
   });
 
   function toggleVisibility() {
-    state.visible = !state.visible;
     /*
-     * Showing is also the way back for notes hidden one at a time — that button
-     * disappears with its own note, so this is the only control left. Without
-     * clearing the flags, a note hidden individually would stay invisible while
-     * the layer claimed to be showing everything.
+     * Reveal if anything at all is concealed, otherwise conceal — rather than
+     * flipping one boolean.
+     *
+     * Notes hide two independent ways: the whole layer, and one note at a time
+     * via its own – button. Flipping state.visible ignored the second, so with
+     * the only note hidden individually the first press re-hid a layer that was
+     * already showing nothing, and it took two presses to get the note back.
+     *
+     * Clearing the flags here is also the only way back for an individually
+     * hidden note: that button disappeared along with it.
      */
+    const anythingHidden = !state.visible || state.notes.some((n) => n._hidden);
+    state.visible = anythingHidden;
+
     if (state.visible) {
       state.notes.forEach((n) => { n._hidden = false; });
       layer.querySelectorAll('.note-hidden').forEach((n) => n.classList.remove('note-hidden'));
