@@ -558,7 +558,16 @@
       n.remove();
     });
     updateBadge();
-    if (!state.visible) return;
+    /*
+     * Always build the notes, even while hidden. `.notes-hidden .note` is what
+     * hides them, and it must be the only thing that does.
+     *
+     * This used to return early when state.visible was false, which left the DOM
+     * empty rather than hidden. Navigating to another record with the notes
+     * hidden ran this, cleared every element and built nothing; toggleVisibility
+     * then only removed the CSS class, revealing an empty layer. The notes came
+     * back solely on a full reload, which starts out visible.
+     */
     state.notes.forEach((n) => renderNote(n));
   }
 
