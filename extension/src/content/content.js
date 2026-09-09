@@ -157,10 +157,25 @@
     .note .notify:hover { background: #ffc93c; }
     .note .notify:active { transform: translateY(1px); }
     .note .notify:disabled { opacity: .55; cursor: default; box-shadow: none; }
+    .note .fold {
+      border: none; background: transparent; cursor: pointer; font-size: 15px;
+      line-height: 1; color: #3a2e00; padding: 0 3px; font-weight: 700;
+    }
     .note .del {
       border: none; background: transparent; cursor: pointer; font-size: 14px;
       line-height: 1; color: #7a2e2e; padding: 0 2px;
     }
+    /*
+     * Minimised: the header stays, everything else folds away. The note keeps its
+     * stored width and height — see the guard in makeResizeObserved, which would
+     * otherwise persist the folded height and leave a 22px note after a reload.
+     * The !important beats the inline height/resize that renderNote writes.
+     */
+    .note.collapsed {
+      height: 22px !important; min-height: 0; resize: none !important;
+    }
+    .note.collapsed textarea,
+    .note.collapsed .footrow { display: none; }
     .note textarea {
       flex: 1; border: none; outline: none; resize: none; background: transparent;
       padding: 8px; font-size: 13px; color: #222; line-height: 1.35;
@@ -447,11 +462,38 @@
     });
     note._refreshNotify = refreshNotify; // appended to the footer row below
 
+    /*
+     * Two buttons, and the destructive one no longer looks like "close".
+     *
+     * The first release had a single ✕ that deleted immediately. Everyone reads ✕
+     * as close, pressed it to get the note out of the way, and lost the note for
+     * the whole team with no undo — reported from a customer test within days.
+     * Minimise folds the note to its header; delete asks first and says who it
+     * affects, because the row is shared and there is no soft-delete to fall back
+     * on (that would need a new field on the custom entity, so a re-import).
+     */
+    const fold = document.createElement('button');
+    fold.className = 'fold';
+    fold.textContent = '–';
+    fold.title = 'Minimise';
+    fold.addEventListener('click', () => {
+      const collapsed = el.classList.toggle('collapsed');
+      fold.textContent = collapsed ? '+' : '–';
+      fold.title = collapsed ? 'Expand' : 'Minimise';
+    });
+    head.appendChild(fold);
+
     const del = document.createElement('button');
     del.className = 'del';
-    del.textContent = '✕';
+    del.textContent = '🗑';
     del.title = 'Delete note';
-    del.addEventListener('click', () => removeNote(note, el));
+    del.addEventListener('click', () => {
+      const ok = window.confirm(
+        'Delete this note?\n\n' +
+          'It is removed from IFS for everyone who can see this record, and cannot be undone.'
+      );
+      if (ok) removeNote(note, el);
+    });
     head.appendChild(del);
 
     const ta = document.createElement('textarea');
@@ -525,8 +567,8 @@
   function makeDraggable(el, handle, note) {
     let startX, startY, originX, originY, dragging = false;
     handle.addEventListener('pointerdown', (e) => {
-      // Only drag from the bare header — never when grabbing a button (✕ / colour swatch),
-      // otherwise pointer capture swallows their click.
+      // Only drag from the bare header — never when grabbing a button (minimise,
+      // delete, colour swatch), otherwise pointer capture swallows their click.
       if (e.target !== handle) return;
       dragging = true;
       startX = e.clientX;
@@ -562,6 +604,7 @@
         return; // ignore the initial observation — only genuine user resizes should persist
       }
       if (!el.isConnected) return; // ignore fires caused by detaching during re-render
+      if (el.classList.contains('collapsed')) return; // folding is not a resize
       const w = Math.round(el.offsetWidth);
       const h = Math.round(el.offsetHeight);
       if (!w || !h) return; // ignore transient zero sizes
