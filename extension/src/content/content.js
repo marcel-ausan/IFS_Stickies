@@ -129,7 +129,7 @@
       min-width: 150px; min-height: 110px; overflow: hidden;
     }
     .note .head {
-      height: 22px; cursor: move; display: flex; align-items: center; justify-content: flex-end;
+      height: 28px; cursor: move; display: flex; align-items: center; justify-content: flex-end;
       gap: 4px; padding: 0 6px; background: rgba(0,0,0,.06);
     }
     .note .swatch {
@@ -161,18 +161,28 @@
       border: none; background: transparent; cursor: pointer; font-size: 15px;
       line-height: 1; color: #3a2e00; padding: 0 3px; font-weight: 700;
     }
+    /*
+     * Same box as ✉ Notify, at the far end of the footer row, but outlined rather
+     * than filled. Matching the size is what was asked for; matching the weight
+     * would have made the destructive action compete with the useful one.
+     */
     .note .del {
-      border: none; background: transparent; cursor: pointer; font-size: 14px;
-      line-height: 1; color: #7a2e2e; padding: 0 2px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(122,46,46,.4); background: transparent; cursor: pointer;
+      font-size: 14px; line-height: 1.1; font-weight: 700; color: #7a2e2e;
+      padding: 8px 14px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 6px;
     }
+    .note .del:hover { background: rgba(122,46,46,.09); border-color: rgba(122,46,46,.65); }
+    .note .del:active { transform: translateY(1px); }
     /*
      * Minimised: the header stays, everything else folds away. The note keeps its
      * stored width and height — see the guard in makeResizeObserved, which would
-     * otherwise persist the folded height and leave a 22px note after a reload.
+     * otherwise persist the folded height and leave a 28px note after a reload.
      * The !important beats the inline height/resize that renderNote writes.
      */
     .note.collapsed {
-      height: 22px !important; min-height: 0; resize: none !important;
+      height: 28px !important; min-height: 0; resize: none !important;
     }
     .note.collapsed textarea,
     .note.collapsed .footrow { display: none; }
@@ -485,7 +495,7 @@
 
     const del = document.createElement('button');
     del.className = 'del';
-    del.textContent = '🗑';
+    del.textContent = '🗑 Delete';
     del.title = 'Delete note';
     del.addEventListener('click', () => {
       const ok = window.confirm(
@@ -494,7 +504,9 @@
       );
       if (ok) removeNote(note, el);
     });
-    head.appendChild(del);
+    // Appended to the footer row below, at the opposite end from ✉ Notify — the
+    // two actions that change something for everybody, kept apart from each other
+    // and away from the header, where ✕ used to catch people out.
 
     const ta = document.createElement('textarea');
     ta.value = note.noteText || '';
@@ -520,6 +532,7 @@
     footRow.className = 'footrow';
     footRow.appendChild(notifyBtn);
     footRow.appendChild(foot);
+    footRow.appendChild(del);
 
     el.appendChild(head);
     el.appendChild(ta);
